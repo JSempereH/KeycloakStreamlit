@@ -1,0 +1,32 @@
+{
+  "id": "minimal",
+  "realm": "minimal",
+  "enabled": true,
+  "displayName": "Minimal Realm",
+  "clients": [
+    {
+      "clientId": "minimal-client",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "serviceAccountsEnabled": true,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "offline_access",
+        "description": "Offline Access Role"
+      },
+      {
+        "name": "uma_authorization",
+        "description": "UMA Authorization Role"
+      }
+    ]
+  },
+  "users": []
+}

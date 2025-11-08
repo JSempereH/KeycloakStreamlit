@@ -1,0 +1,51 @@
+services:
+
+  keycloak:
+    image: keycloak/keycloak:24.0.2
+    container_name: MinimalKeycloak
+    environment:
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgresql/keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=keycloak
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HEALTH_ENABLED=true
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    volumes:
+      - ./keycloak/minimal-realm.json:/opt/keycloak/data/import/minimal-realm.json
+    command: start-dev --import-realm
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
+  postgresql:
+    image: postgres:15.2
+    container_name: postgresql-Keycloak
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=keycloak
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
